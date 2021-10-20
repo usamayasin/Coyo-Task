@@ -25,12 +25,12 @@ class PostDetailsFragment : BaseFragment<PostDetailsFragmentBinding>() {
     private val viewModel: PostDetailsViewModel by viewModels()
     private lateinit var commentsAdapter: CommentsAdapter
     private var commentsLayoutManager: RecyclerView.LayoutManager? = null
-
+    private lateinit var post:PostModel
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        val post = arguments?.getParcelable<PostModel>("post")
+        this.post = requireArguments().getParcelable<PostModel>("post")!!
         if (post == null) {
             findNavController().popBackStack()
             return
@@ -62,32 +62,35 @@ class PostDetailsFragment : BaseFragment<PostDetailsFragmentBinding>() {
                 is LoadingState -> {
                     bi.progressPostDetails.visible()
                     bi.recyclerComments.gone()
+                    bi.tvCommentError.gone()
                 }
 
                 is ContentState -> {
                     bi.progressPostDetails.gone()
                     bi.recyclerComments.visible()
+                    bi.tvCommentError.gone()
                 }
 
                 is ErrorState -> {
+                    bi.tvCommentError.visible()
                     bi.progressPostDetails.gone()
-                    bi.recyclerComments.visible()
-                    viewModel.retry()
+                    bi.recyclerComments.gone()
                 }
+
             }
         }
 
 
-        viewModel.userModelLiveData.observe(viewLifecycleOwner) { user ->
+        viewModel.userLiveData.observe(viewLifecycleOwner) { user ->
             bi.tvPostedBy.text = getString(R.string.posted_by, user.name)
         }
 
-        viewModel.postModelLiveData.observe(viewLifecycleOwner) { post ->
+        viewModel.postLiveData.observe(viewLifecycleOwner) { post ->
             bi.tvPostTitle.text = post.title
             bi.tvPostBody.text = post.body
         }
 
-        viewModel.commentModelLiveData.observe(viewLifecycleOwner) { comments ->
+        viewModel.commentLiveData.observe(viewLifecycleOwner) { comments ->
             bi.tvCommentsCount.text = getString(R.string.comments, comments.size.toString())
             commentsAdapter.updateItems(comments)
         }

@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.android.coyotask.data.DataState
 import com.android.coyotask.data.usecase.FetchCommentsUsecase
-import com.android.coyotask.data.usecase.FetchPostsUsecase
 import com.android.coyotask.data.usecase.FetchUserInfoUsecase
 import com.android.coyotask.model.CommentModel
 import com.android.coyotask.model.PostModel
@@ -27,13 +26,13 @@ class PostDetailsViewModel @Inject constructor(
     var uiStateLiveData: LiveData<PostDetailsUiState> = _uiState
 
     private var _userModel = MutableLiveData<UserModel>()
-    var userModelLiveData: LiveData<UserModel> = _userModel
+    var userLiveData: LiveData<UserModel> = _userModel
 
     private var _postModel = MutableLiveData<PostModel>()
-    var postModelLiveData: LiveData<PostModel> = _postModel
+    var postLiveData: LiveData<PostModel> = _postModel
 
     private var _commentModel = MutableLiveData<List<CommentModel>>()
-    var commentModelLiveData: LiveData<List<CommentModel>> = _commentModel
+    var commentLiveData: LiveData<List<CommentModel>> = _commentModel
 
     init {
 
@@ -45,9 +44,6 @@ class PostDetailsViewModel @Inject constructor(
         fetchComments(post.id)
     }
 
-    fun retry() {
-        fetchUserInfo(1)
-    }
 
     private fun fetchUserInfo(userId: Int) {
         _uiState.postValue(LoadingState)
@@ -55,7 +51,6 @@ class PostDetailsViewModel @Inject constructor(
             fetchUserInfoUsecase.invoke(userId = userId).collect { dataState ->
                 when (dataState) {
                     is DataState.Success -> {
-                        // first page
                         _uiState.postValue(ContentState)
                         _userModel.postValue(dataState.data[0])
                     }
@@ -73,7 +68,6 @@ class PostDetailsViewModel @Inject constructor(
             fetchCommentsUsecase.invoke(postId = postId).collect { dataState ->
                 when (dataState) {
                     is DataState.Success -> {
-                        // first page
                         _uiState.postValue(ContentState)
                         _commentModel.postValue(dataState.data)
                     }

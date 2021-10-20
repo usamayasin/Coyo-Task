@@ -38,6 +38,11 @@ class HomeViewModel @Inject constructor(
         fetchPosts(start)
     }
 
+    fun refresh(start: Int) {
+        this.start = start
+        fetchPosts(this.start)
+    }
+
     private fun fetchPosts(start: Int) {
         _uiState.postValue(if (start == 0) LoadingState else LoadingNextPageState)
         viewModelScope.launch {

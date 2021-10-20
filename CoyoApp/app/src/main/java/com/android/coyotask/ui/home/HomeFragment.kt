@@ -58,6 +58,11 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
                 }
             }
         }
+
+        bi.swipeRefreshLayout.setOnRefreshListener {
+            viewModel.refresh(0)
+            bi.swipeRefreshLayout.isRefreshing = false
+        }
     }
 
     private fun initObservations() {
@@ -104,10 +109,8 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         }
 
         viewModel.postsListLiveData.observe(viewLifecycleOwner) { posts ->
-            println("List is -> ${posts.size}")
-            postsAdapter.updateItems(posts)
+            postsAdapter.differ.submitList(posts)
         }
     }
-
 
 }

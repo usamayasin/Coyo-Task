@@ -10,5 +10,6 @@
 
     <string name="posted_by">Posted By: %1$s</string>
     <string name="comments">%1$s Comments</string>
+    <string name="no_comments_found">No Comments Found</string>
 
 </resources>

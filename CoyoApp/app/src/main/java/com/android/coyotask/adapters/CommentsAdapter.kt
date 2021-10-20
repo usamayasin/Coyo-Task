@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.android.coyotask.databinding.CommentItemLayoutBinding
 import com.android.coyotask.model.CommentModel
 
-class CommentsAdapter() :
+class CommentsAdapter :
     RecyclerView.Adapter<CommentsAdapter.CommentViewHolder>() {
 
     private val commentItems: ArrayList<CommentModel> = arrayListOf()
